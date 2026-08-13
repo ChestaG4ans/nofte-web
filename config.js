@@ -6,14 +6,16 @@ const CONFIG = {
     API_URL: "https://nofte-api.chestaadabikarnen03.workers.dev",
     CHAT_API_URL: "https://nofte-api.chestaadabikarnen03.workers.dev/api/chat",
 
-    // For local development, use localhost
+    // For local development (optional)
     isLocal: window.location.hostname === 'localhost',
 
     // Get the appropriate API URL
     getChatUrl() {
-        return this.isLocal ? "http://localhost:3000/api/chat" : this.CHAT_API_URL;
+        // Always use Worker URL (no localhost fallback)
+        return this.CHAT_API_URL;
     },
     getApiUrl() {
-        return this.isLocal ? "http://localhost:8000" : this.API_URL;
+        // Always use Worker URL (no localhost fallback)
+        return this.API_URL;
     }
 };
