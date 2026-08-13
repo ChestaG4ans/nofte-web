@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kadaluarsa - NoFTe</title>
+    <title>Inventory - NoFTe</title>
     <link rel="icon" type="image/png" href="assets/logo.png">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -33,11 +33,11 @@
                 <span class="nav-icon">&#128196;</span>
                 <span class="nav-label">Riwayat</span>
             </a>
-            <a href="expiry.html" class="nav-item active">
+            <a href="expiry.html" class="nav-item">
                 <span class="nav-icon">&#9200;</span>
                 <span class="nav-label">Kadaluarsa</span>
             </a>
-            <a href="inventory.html" class="nav-item">
+            <a href="inventory.html" class="nav-item active">
                 <span class="nav-icon">&#128230;</span>
                 <span class="nav-label">Inventory</span>
             </a>
@@ -74,8 +74,8 @@
                 <button class="menu-toggle" onclick="toggleSidebar()">&#9776;</button>
             </div>
             <div class="header-left">
-                <h1>&#9200; Kadaluarsa</h1>
-                <p>Pantau umur simpan makanan Anda</p>
+                <h1>&#128230; Inventory</h1>
+                <p>Kelola stok makanan dengan AI</p>
             </div>
             <div class="header-actions">
                 <button class="icon-btn">&#128269;</button>
@@ -106,73 +106,75 @@
         <!-- PAGE CONTENT -->
         <div class="page-content">
 
-            <!-- STATS -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">&#128293;</div>
-                    <div class="stat-content">
-                        <div class="stat-label">Kritis</div>
-                        <div class="stat-value" id="statCritical">0</div>
-                        <div class="stat-change">Gunakan hari ini</div>
-                    </div>
+            <!-- RECOMMENDATIONS -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>&#128161; Rekomendasi AI</h2>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-icon">&#9888;</div>
-                    <div class="stat-content">
-                        <div class="stat-label">Peringatan</div>
-                        <div class="stat-value" id="statWarning">0</div>
-                        <div class="stat-change">&#8804; 3 hari</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">&#10004;</div>
-                    <div class="stat-content">
-                        <div class="stat-label">Aman</div>
-                        <div class="stat-value" id="statSafe">0</div>
-                        <div class="stat-change">> 3 hari</div>
-                    </div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">&#127793;</div>
-                    <div class="stat-content">
-                        <div class="stat-label">Limbah Dicegah</div>
-                        <div class="stat-value">12.4 kg</div>
-                        <div class="stat-change">-42% pengurangan</div>
+                <div id="recommendationList">
+                    <div class="rec-item urgent">
+                        <span class="rec-icon">&#8987;</span>
+                        <div class="rec-content">
+                            <h4>Memuat...</h4>
+                            <p>AI sedang menganalisis inventory Anda</p>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- AI EXPLANATION -->
+            <!-- ADD FORM -->
             <div class="card">
                 <div class="card-header">
-                    <h2>&#129504; Estimasi AI</h2>
-                    <span class="badge badge-primary">Powered by AI</span>
+                    <h2>&#10133; Tambah Item</h2>
+                    <span class="badge badge-primary">AI estimasi otomatis</span>
                 </div>
-                <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.7;">
-                    Estimasi umur simpan dihitung dari analisis gambar (warna, tekstur), jenis makanan, dan kondisi penyimpanan.
-                </p>
+
+                <form id="inventoryForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nama Makanan</label>
+                            <input type="text" id="itemName" placeholder="cth: Tomat" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Jumlah</label>
+                            <input type="number" id="itemQty" placeholder="5" min="1" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Satuan</label>
+                            <input type="text" id="itemUnit" placeholder="Buah" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Tanggal Simpan</label>
+                            <input type="date" id="itemDate" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">&#10133; Tambah ke Inventory</button>
+                    <p id="inventoryMessage" style="margin-top: 16px; font-size: 14px;"></p>
+                </form>
             </div>
 
-            <!-- EXPIRY LIST -->
+            <!-- INVENTORY LIST -->
             <div class="card">
                 <div class="card-header">
-                    <h2>&#128203; Daftar Makanan</h2>
-                    <span class="badge badge-success">Urgensi</span>
+                    <h2>&#128203; Inventory Saat Ini</h2>
+                    <span class="badge badge-success">AI Tracking</span>
                 </div>
-                <div class="expiry-list" id="expiryGrid">
+                <div id="inventoryGrid" class="inventory-grid">
                     <!-- Dynamic content -->
                 </div>
             </div>
 
-            <!-- WASTE IMPACT -->
+            <!-- WASTE CALCULATOR -->
             <div class="card">
                 <div class="card-header">
-                    <h2>&#127793; Dampak Pencegahan Limbah</h2>
-                    <span class="badge badge-success">Bulan Ini</span>
+                    <h2>&#128202; Kalkulator Limbah</h2>
+                    <span class="badge badge-success">-42% Hemat</span>
                 </div>
                 <div class="analytics-grid">
                     <div class="analytics-stat">
-                        <div class="analytics-stat-value" style="color: var(--success);">12.4 kg</div>
+                        <div class="analytics-stat-value" id="calcFoodSaved">0 kg</div>
                         <div class="analytics-stat-label">Diselamatkan</div>
                     </div>
                     <div class="analytics-stat">
@@ -180,8 +182,8 @@
                         <div class="analytics-stat-label">Pengurangan</div>
                     </div>
                     <div class="analytics-stat">
-                        <div class="analytics-stat-value" style="color: var(--success);">Rp 186K</div>
-                        <div class="analytics-stat-label">Dihemat</div>
+                        <div class="analytics-stat-value" id="calcMealsPrevented">~0</div>
+                        <div class="analytics-stat-label">Porsi Dicegah</div>
                     </div>
                 </div>
             </div>
@@ -190,8 +192,9 @@
     </main>
 </div>
 
+<script src="config.js"></script>
 <script src="auth.js"></script>
-<script src="expiry.js"></script>
+<script src="inventory.js"></script>
 <script src="notifications.js"></script>
 <script>
 // Apply saved theme on load
@@ -211,6 +214,66 @@ document.getElementById('sidebarOverlay').addEventListener('click', function() {
     this.classList.remove('active');
     document.getElementById('sidebar').classList.remove('open');
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    const dateInput = document.getElementById('itemDate');
+    if (dateInput) dateInput.valueAsDate = new Date();
+});
+
+function generateRecommendations(items) {
+    const container = document.getElementById('recommendationList');
+    if (!container) return;
+
+    if (!items || !items.length) {
+        container.innerHTML = `
+            <div class="rec-item">
+                <span class="rec-icon">&#128230;</span>
+                <div class="rec-content">
+                    <h4>Inventory Kosong</h4>
+                    <p>Tambahkan makanan untuk rekomendasi AI</p>
+                </div>
+            </div>`;
+        return;
+    }
+
+    const sorted = [...items].sort((a, b) => (a.expiry_days || 0) - (b.expiry_days || 0));
+    const urgent = sorted.filter(i => (i.expiry_days || 0) <= 3);
+    const warning = sorted.filter(i => (i.expiry_days || 0) > 3 && (i.expiry_days || 0) <= 7);
+
+    let html = '';
+
+    if (urgent.length) {
+        html += `<div class="rec-item urgent">
+            <span class="rec-icon">&#128293;</span>
+            <div class="rec-content">
+                <h4>Konsumsi Sekarang</h4>
+                <p>${urgent.map(i => `${i.name} (${i.expiry_days} hari)`).join(', ')}</p>
+                <span class="rec-suggestion">&#10140; Gunakan dalam menu hari ini</span>
+            </div>
+        </div>`;
+    }
+
+    if (warning.length) {
+        html += `<div class="rec-item warning">
+            <span class="rec-icon">&#9888;</span>
+            <div class="rec-content">
+                <h4>Rencanakan Penggunaan</h4>
+                <p>${warning.slice(0, 3).map(i => `${i.name} (${i.expiry_days} hari)`).join(', ')}</p>
+                <span class="rec-suggestion">&#10140; Masukkan dalam menu minggu ini</span>
+            </div>
+        </div>`;
+    }
+
+    container.innerHTML = html;
+}
+
+function updateWasteCalculator(items) {
+    if (!items) return;
+    const urgent = items.filter(i => (i.expiry_days || 0) <= 3).length;
+    const foodSaved = (urgent * 0.4 + (items.length - urgent) * 0.2).toFixed(1);
+    document.getElementById('calcFoodSaved').textContent = `${foodSaved} kg`;
+    document.getElementById('calcMealsPrevented').textContent = `~${Math.round(urgent * 1.5)}`;
+}
 </script>
 
 </body>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scan - NoFTe</title>
+    <title>Kadaluarsa - NoFTe</title>
     <link rel="icon" type="image/png" href="assets/logo.png">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -25,7 +25,7 @@
                 <span class="nav-icon">&#127968;</span>
                 <span class="nav-label">Dashboard</span>
             </a>
-            <a href="scan.html" class="nav-item active">
+            <a href="scan.html" class="nav-item">
                 <span class="nav-icon">&#128247;</span>
                 <span class="nav-label">Scan Makanan</span>
             </a>
@@ -33,7 +33,7 @@
                 <span class="nav-icon">&#128196;</span>
                 <span class="nav-label">Riwayat</span>
             </a>
-            <a href="expiry.html" class="nav-item">
+            <a href="expiry.html" class="nav-item active">
                 <span class="nav-icon">&#9200;</span>
                 <span class="nav-label">Kadaluarsa</span>
             </a>
@@ -74,8 +74,8 @@
                 <button class="menu-toggle" onclick="toggleSidebar()">&#9776;</button>
             </div>
             <div class="header-left">
-                <h1>&#128247; Scan Makanan</h1>
-                <p>Ambil foto untuk deteksi kesegaran dengan AI</p>
+                <h1>&#9200; Kadaluarsa</h1>
+                <p>Pantau umur simpan makanan Anda</p>
             </div>
             <div class="header-actions">
                 <button class="icon-btn">&#128269;</button>
@@ -106,65 +106,82 @@
         <!-- PAGE CONTENT -->
         <div class="page-content">
 
-            <!-- SCAN CARD -->
-            <div class="card">
-                <div class="card-header">
-                    <h2>&#128249; Ambil Foto</h2>
-                    <span class="badge badge-primary">AI Powered</span>
-                </div>
-
-                <div class="scan-container" id="scanContainer">
-                    <img id="previewImage" style="display: none;">
-                    <div class="scan-placeholder" id="emptyState">
-                        <div class="scan-icon">&#128247;</div>
-                        <p>Ambil foto atau pilih dari galeri</p>
+            <!-- STATS -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">&#128293;</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Kritis</div>
+                        <div class="stat-value" id="statCritical">0</div>
+                        <div class="stat-change">Gunakan hari ini</div>
                     </div>
                 </div>
-
-                <div class="scan-actions">
-                    <label for="imageInput" class="btn btn-secondary">&#128193; Pilih Gambar</label>
-                    <button id="scanButton" class="btn btn-primary">&#9654; Mulai Scan</button>
+                <div class="stat-card">
+                    <div class="stat-icon">&#9888;</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Peringatan</div>
+                        <div class="stat-value" id="statWarning">0</div>
+                        <div class="stat-change">&#8804; 3 hari</div>
+                    </div>
                 </div>
-
-                <input id="imageInput" type="file" accept="image/*" hidden>
+                <div class="stat-card">
+                    <div class="stat-icon">&#10004;</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Aman</div>
+                        <div class="stat-value" id="statSafe">0</div>
+                        <div class="stat-change">> 3 hari</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">&#127793;</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Limbah Dicegah</div>
+                        <div class="stat-value">12.4 kg</div>
+                        <div class="stat-change">-42% pengurangan</div>
+                    </div>
+                </div>
             </div>
 
-            <!-- RESULTS -->
-            <div class="card" id="resultsCard" style="display: none;">
+            <!-- AI EXPLANATION -->
+            <div class="card">
                 <div class="card-header">
-                    <h2>&#129302; Hasil Analisis</h2>
-                    <span class="badge badge-primary">CNN + YOLO</span>
+                    <h2>&#129504; Estimasi AI</h2>
+                    <span class="badge badge-primary">Powered by AI</span>
                 </div>
-                <div id="results">
-                    <p style="text-align: center; color: var(--text-secondary); padding: 40px;">AI sedang menganalisis...</p>
+                <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.7;">
+                    Estimasi umur simpan dihitung dari analisis gambar (warna, tekstur), jenis makanan, dan kondisi penyimpanan.
+                </p>
+            </div>
+
+            <!-- EXPIRY LIST -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>&#128203; Daftar Makanan</h2>
+                    <span class="badge badge-success">Urgensi</span>
+                </div>
+                <div class="expiry-list" id="expiryGrid">
+                    <!-- Dynamic content -->
                 </div>
             </div>
 
-            <!-- HOW AI WORKS -->
+            <!-- WASTE IMPACT -->
             <div class="card">
                 <div class="card-header">
-                    <h2>&#129504; Cara Kerja AI</h2>
+                    <h2>&#127793; Dampak Pencegahan Limbah</h2>
+                    <span class="badge badge-success">Bulan Ini</span>
                 </div>
-                <div class="ai-steps-grid">
-                    <div class="ai-step-card">
-                        <div class="step-number">1</div>
-                        <h4>AI Vision</h4>
-                        <p>CNN & YOLO mengenali makanan dari gambar</p>
+                <div class="analytics-grid">
+                    <div class="analytics-stat">
+                        <div class="analytics-stat-value" style="color: var(--success);">12.4 kg</div>
+                        <div class="analytics-stat-label">Diselamatkan</div>
                     </div>
-                    <div class="ai-step-card">
-                        <div class="step-number">2</div>
-                        <h4>Deteksi Kesegaran</h4>
-                        <p>Segar / Kurang Segar / Tidak Segar</p>
+                    <div class="analytics-stat">
+                        <div class="analytics-stat-value" style="color: var(--success);">-42%</div>
+                        <div class="analytics-stat-label">Pengurangan</div>
                     </div>
-                    <div class="ai-step-card">
-                        <div class="step-number">3</div>
-                        <h4>Estimasi Umur</h4>
-                        <p>Prediksi berdasarkan jenis & kondisi</p>
-                    </div>
-                    <div class="ai-step-card">
-                        <div class="step-number">4</div>
-                        <h4>Rekomendasi</h4>
-                        <p>Saran menu & tindakan</p>
+                    <div class="analytics-stat">
+                        <div class="analytics-stat-value" style="color: var(--success);">Rp 186K</div>
+                        <div class="analytics-stat-label">Dihemat</div>
                     </div>
                 </div>
             </div>
@@ -173,8 +190,9 @@
     </main>
 </div>
 
+<script src="config.js"></script>
 <script src="auth.js"></script>
-<script src="scan.js"></script>
+<script src="expiry.js"></script>
 <script src="notifications.js"></script>
 <script>
 // Apply saved theme on load

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scan - NoFTe</title>
+    <title>AI Assistant - NoFTe</title>
     <link rel="icon" type="image/png" href="assets/logo.png">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -25,7 +25,7 @@
                 <span class="nav-icon">&#127968;</span>
                 <span class="nav-label">Dashboard</span>
             </a>
-            <a href="scan.html" class="nav-item active">
+            <a href="scan.html" class="nav-item">
                 <span class="nav-icon">&#128247;</span>
                 <span class="nav-label">Scan Makanan</span>
             </a>
@@ -41,7 +41,7 @@
                 <span class="nav-icon">&#128230;</span>
                 <span class="nav-label">Inventory</span>
             </a>
-            <a href="assistant.html" class="nav-item">
+            <a href="assistant.html" class="nav-item active">
                 <span class="nav-icon">&#129302;</span>
                 <span class="nav-label">AI Assistant</span>
             </a>
@@ -74,8 +74,8 @@
                 <button class="menu-toggle" onclick="toggleSidebar()">&#9776;</button>
             </div>
             <div class="header-left">
-                <h1>&#128247; Scan Makanan</h1>
-                <p>Ambil foto untuk deteksi kesegaran dengan AI</p>
+                <h1>&#129302; AI Assistant</h1>
+                <p>Tanyakan tentang makanan dan kesegaran</p>
             </div>
             <div class="header-actions">
                 <button class="icon-btn">&#128269;</button>
@@ -106,66 +106,34 @@
         <!-- PAGE CONTENT -->
         <div class="page-content">
 
-            <!-- SCAN CARD -->
-            <div class="card">
-                <div class="card-header">
-                    <h2>&#128249; Ambil Foto</h2>
-                    <span class="badge badge-primary">AI Powered</span>
-                </div>
-
-                <div class="scan-container" id="scanContainer">
-                    <img id="previewImage" style="display: none;">
-                    <div class="scan-placeholder" id="emptyState">
-                        <div class="scan-icon">&#128247;</div>
-                        <p>Ambil foto atau pilih dari galeri</p>
+            <!-- CHAT -->
+            <div class="chat-container">
+                <div id="chatBox" class="chat-box">
+                    <div class="message ai">
+                        &#128075; Halo! Saya asisten AI NoFTe.<br><br>
+                        Saya bisa membantu:<br>
+                        &#8226; Info kesegaran makanan<br>
+                        &#8226; Saran menu harian<br>
+                        &#8226; Tips penyimpanan<br>
+                        &#8226; Resep dari bahan expiring
                     </div>
                 </div>
-
-                <div class="scan-actions">
-                    <label for="imageInput" class="btn btn-secondary">&#128193; Pilih Gambar</label>
-                    <button id="scanButton" class="btn btn-primary">&#9654; Mulai Scan</button>
-                </div>
-
-                <input id="imageInput" type="file" accept="image/*" hidden>
-            </div>
-
-            <!-- RESULTS -->
-            <div class="card" id="resultsCard" style="display: none;">
-                <div class="card-header">
-                    <h2>&#129302; Hasil Analisis</h2>
-                    <span class="badge badge-primary">CNN + YOLO</span>
-                </div>
-                <div id="results">
-                    <p style="text-align: center; color: var(--text-secondary); padding: 40px;">AI sedang menganalisis...</p>
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="Ketik pertanyaan Anda...">
+                    <button id="sendBtn" class="btn btn-primary">&#10148;</button>
                 </div>
             </div>
 
-            <!-- HOW AI WORKS -->
+            <!-- QUICK ACTIONS -->
             <div class="card">
                 <div class="card-header">
-                    <h2>&#129504; Cara Kerja AI</h2>
+                    <h2>&#128172; Tanya Cepat</h2>
                 </div>
-                <div class="ai-steps-grid">
-                    <div class="ai-step-card">
-                        <div class="step-number">1</div>
-                        <h4>AI Vision</h4>
-                        <p>CNN & YOLO mengenali makanan dari gambar</p>
-                    </div>
-                    <div class="ai-step-card">
-                        <div class="step-number">2</div>
-                        <h4>Deteksi Kesegaran</h4>
-                        <p>Segar / Kurang Segar / Tidak Segar</p>
-                    </div>
-                    <div class="ai-step-card">
-                        <div class="step-number">3</div>
-                        <h4>Estimasi Umur</h4>
-                        <p>Prediksi berdasarkan jenis & kondisi</p>
-                    </div>
-                    <div class="ai-step-card">
-                        <div class="step-number">4</div>
-                        <h4>Rekomendasi</h4>
-                        <p>Saran menu & tindakan</p>
-                    </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                    <button class="btn btn-secondary" onclick="quickQuestion('Tips menyimpan tomat?')">&#127813; Tips Tomat</button>
+                    <button class="btn btn-secondary" onclick="quickQuestion('Menu cepat dari pisang?')">&#127820; Menu Pisang</button>
+                    <button class="btn btn-secondary" onclick="quickQuestion('Berapa lama susu tahan?')">&#127968; Umur Susu</button>
+                    <button class="btn btn-secondary" onclick="quickQuestion('Resep brokoli expiring?')">&#129388; Resep Brokoli</button>
                 </div>
             </div>
 
@@ -173,8 +141,8 @@
     </main>
 </div>
 
-<script src="auth.js"></script>
-<script src="scan.js"></script>
+<script src="config.js"></script>
+<script src="chat.js"></script>
 <script src="notifications.js"></script>
 <script>
 // Apply saved theme on load
@@ -194,6 +162,11 @@ document.getElementById('sidebarOverlay').addEventListener('click', function() {
     this.classList.remove('active');
     document.getElementById('sidebar').classList.remove('open');
 });
+
+function quickQuestion(question) {
+    const input = document.getElementById('chatInput');
+    if (input) input.value = question;
+}
 </script>
 
 </body>
