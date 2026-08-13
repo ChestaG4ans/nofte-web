@@ -1,63 +1,59 @@
-// Inventory JavaScript - Connects to NoFTe Backend
+// Inventory JavaScript - Demo Mode
+const API_URL = window.API_URL || "https://nofte-api.chestaadabikarnen03.workers.dev";
 
 const inventoryForm = document.getElementById("inventoryForm");
 const inventoryGrid = document.getElementById("inventoryGrid");
 const inventoryMessage = document.getElementById("inventoryMessage");
 
+// Demo inventory data
+let inventoryItems = [
+    { id: 1, name: "Tomat", quantity: 5, unit: "buah", expiry_days: 2, status: "critical" },
+    { id: 2, name: "Bayam", quantity: 200, unit: "gram", expiry_days: 1, status: "critical" },
+    { id: 3, name: "Telur", quantity: 6, unit: "buah", expiry_days: 3, status: "soon" },
+    { id: 4, name: "Susu", quantity: 1, unit: "liter", expiry_days: 5, status: "soon" },
+    { id: 5, name: "Ayam", quantity: 500, unit: "gram", expiry_days: 7, status: "fresh" },
+    { id: 6, name: "Wortel", quantity: 3, unit: "buah", expiry_days: 10, status: "fresh" },
+];
+
 document.addEventListener("DOMContentLoaded", async () => {
-    await loadInventory();
+    loadInventory();
+
     if (inventoryForm) {
         inventoryForm.addEventListener("submit", onSubmitInventory);
     }
+
     // Set default date
     const dateInput = document.getElementById("itemDate");
     if (dateInput) dateInput.valueAsDate = new Date();
 });
 
 async function loadInventory() {
-    const token = getToken();
-    if (!token) {
-        logout();
-        return;
-    }
-
     if (inventoryGrid) {
         inventoryGrid.innerHTML = `
             <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px;">
-                <div style="font-size: 48px; margin-bottom: 16px;">&#8987;</div>
+                <div style="font-size: 48px; margin-bottom: 16px;">⏳</div>
                 <p style="color: var(--text-secondary);">Memuat inventory...</p>
             </div>
         `;
     }
 
     try {
-        const response = await apiRequest('/inventory');
+        // Try to fetch from API
+        const response = await fetch(`${API_URL}/inventory`);
 
-        if (response.status === 401) {
-            logout();
-            return;
+        if (response.ok) {
+            inventoryItems = await response.json();
         }
-
-        if (!response.ok) {
-            throw new Error("Gagal memuat inventory.");
-        }
-
-        const items = await response.json();
-        renderInventory(items);
-        generateRecommendations(items);
-        updateWasteCalculator(items);
     } catch (error) {
-        console.error("Inventory Error:", error);
-        if (inventoryGrid) {
-            inventoryGrid.innerHTML = `
-                <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px;">
-                    <div style="font-size: 48px; margin-bottom: 16px;">&#9888;</div>
-                    <p style="color: var(--danger);">Gagal memuat inventory.</p>
-                    <small style="color: var(--text-muted);">Pastikan backend NoFTe berjalan</small>
-                </div>
-            `;
-        }
+        console.log("Using demo inventory data");
     }
+
+    // Small delay for loading effect
+    setTimeout(() => {
+        renderInventory(inventoryItems);
+        generateRecommendations(inventoryItems);
+        updateWasteCalculator(inventoryItems);
+    }, 300);
 }
 
 function renderInventory(items) {
@@ -66,7 +62,7 @@ function renderInventory(items) {
     if (!items || !items.length) {
         inventoryGrid.innerHTML = `
             <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px;">
-                <div style="font-size: 64px; margin-bottom: 16px;">&#128230;</div>
+                <div style="font-size: 64px; margin-bottom: 16px;">📦</div>
                 <p>Inventory kosong</p>
                 <small style="color: var(--text-muted);">Tambahkan makanan pertama Anda</small>
             </div>
@@ -104,22 +100,14 @@ function renderInventory(items) {
     }).join('');
 }
 
-async function onSubmitInventory(event) {
+function onSubmitInventory(event) {
     event.preventDefault();
-    const token = getToken();
-    if (!token) {
-        logout();
-        return;
-    }
 
-    const payload = {
-        name: document.getElementById("itemName").value.trim(),
-        quantity: Number(document.getElementById("itemQty").value) || 1,
-        unit: document.getElementById("itemUnit").value.trim() || "Item",
-        expiry_days: 7
-    };
+    const name = document.getElementById("itemName")?.value.trim();
+    const qty = document.getElementById("itemQty")?.value || 1;
+    const unit = document.getElementById("itemUnit")?.value.trim() || "Item";
 
-    if (!payload.name) {
+    if (!name) {
         if (inventoryMessage) {
             inventoryMessage.textContent = "Nama harus diisi.";
             inventoryMessage.style.color = "var(--danger)";
@@ -127,49 +115,32 @@ async function onSubmitInventory(event) {
         return;
     }
 
+    // Add to local inventory
+    const newItem = {
+        id: Date.now(),
+        name: name,
+        quantity: Number(qty),
+        unit: unit,
+        expiry_days: 7,
+        status: "fresh"
+    };
+
+    inventoryItems.unshift(newItem);
+    renderInventory(inventoryItems);
+    generateRecommendations(inventoryItems);
+    updateWasteCalculator(inventoryItems);
+
+    if (inventoryForm) inventoryForm.reset();
+    const dateInput = document.getElementById("itemDate");
+    if (dateInput) dateInput.valueAsDate = new Date();
+
     if (inventoryMessage) {
-        inventoryMessage.textContent = "Menyimpan...";
-        inventoryMessage.style.color = "var(--text-secondary)";
-    }
-
-    try {
-        const response = await apiRequest('/inventory', {
-            method: 'POST',
-            body: JSON.stringify(payload)
-        });
-
-        if (response.status === 401) {
-            logout();
-            return;
-        }
-
-        if (!response.ok) {
-            const err = await response.json();
-            throw new Error(err.detail || "Gagal menambah.");
-        }
-
-        if (inventoryForm) inventoryForm.reset();
-        const dateInput = document.getElementById("itemDate");
-        if (dateInput) dateInput.valueAsDate = new Date();
-
-        if (inventoryMessage) {
-            inventoryMessage.textContent = "Berhasil ditambahkan!";
-            inventoryMessage.style.color = "var(--success)";
-        }
-
-        await loadInventory();
+        inventoryMessage.textContent = "Berhasil ditambahkan!";
+        inventoryMessage.style.color = "var(--success)";
 
         setTimeout(() => {
-            if (inventoryMessage) {
-                inventoryMessage.textContent = "";
-            }
+            inventoryMessage.textContent = "";
         }, 3000);
-
-    } catch (error) {
-        if (inventoryMessage) {
-            inventoryMessage.textContent = `Gagal: ${error.message}`;
-            inventoryMessage.style.color = "var(--danger)";
-        }
     }
 }
 
@@ -180,7 +151,7 @@ function generateRecommendations(items) {
     if (!items || !items.length) {
         container.innerHTML = `
             <div class="rec-item">
-                <span class="rec-icon">&#128230;</span>
+                <span class="rec-icon">📦</span>
                 <div class="rec-content">
                     <h4>Inventory Kosong</h4>
                     <p>Tambahkan makanan untuk rekomendasi AI</p>
@@ -197,28 +168,28 @@ function generateRecommendations(items) {
 
     if (urgent.length) {
         html += `<div class="rec-item urgent">
-            <span class="rec-icon">&#128293;</span>
+            <span class="rec-icon">🔥</span>
             <div class="rec-content">
                 <h4>Konsumsi Sekarang</h4>
                 <p>${urgent.map(i => `${i.name} (${i.expiry_days} hari)`).join(', ')}</p>
-                <span class="rec-suggestion">&#10140; Gunakan dalam menu hari ini</span>
+                <span class="rec-suggestion">→ Gunakan dalam menu hari ini</span>
             </div>
         </div>`;
     }
 
     if (warning.length) {
         html += `<div class="rec-item warning">
-            <span class="rec-icon">&#9888;</span>
+            <span class="rec-icon">⚠️</span>
             <div class="rec-content">
                 <h4>Rencanakan Penggunaan</h4>
                 <p>${warning.slice(0, 3).map(i => `${i.name} (${i.expiry_days} hari)`).join(', ')}</p>
-                <span class="rec-suggestion">&#10140; Masukkan dalam menu minggu ini</span>
+                <span class="rec-suggestion">→ Masukkan dalam menu minggu ini</span>
             </div>
         </div>`;
     }
 
     container.innerHTML = html || `<div class="rec-item">
-        <span class="rec-icon">&#10004;</span>
+        <span class="rec-icon">✅</span>
         <div class="rec-content">
             <h4>Semua Aman</h4>
             <p>Tidak ada makanan yang segera expire</p>
@@ -252,20 +223,20 @@ function calculateExpiryDate(daysLeft) {
 
 function getFoodIcon(name) {
     const n = (name || "").toLowerCase();
-    if (n.includes('apel')) return '&#127822;';
-    if (n.includes('pisang')) return '&#127820;';
-    if (n.includes('tomat')) return '&#127813;';
-    if (n.includes('wortel')) return '&#129365;';
-    if (n.includes('brokoli')) return '&#129388;';
-    if (n.includes('susu')) return '&#127968;';
-    if (n.includes('telur')) return '&#129370;';
-    if (n.includes('ayam')) return '&#127831;';
-    if (n.includes('ikan')) return '&#128031;';
-    if (n.includes('nasi')) return '&#127838;';
-    if (n.includes('roti')) return '&#127838;';
-    if (n.includes('keju')) return '&#129472;';
-    if (n.includes('sayur')) return '&#129389;';
-    return '&#127829;';
+    if (n.includes('apel')) return '🍎';
+    if (n.includes('pisang')) return '🍌';
+    if (n.includes('tomat')) return '🍅';
+    if (n.includes('wortel')) return '🥕';
+    if (n.includes('brokoli')) return '🥦';
+    if (n.includes('susu')) return '🥛';
+    if (n.includes('telur')) return '🥚';
+    if (n.includes('ayam')) return '🍗';
+    if (n.includes('ikan')) return '🐟';
+    if (n.includes('nasi')) return '🍚';
+    if (n.includes('roti')) return '🍞';
+    if (n.includes('keju')) return '🧀';
+    if (n.includes('sayur')) return '🥬';
+    return '🍳';
 }
 
 function escapeHtml(value) {

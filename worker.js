@@ -175,6 +175,26 @@ export default {
       });
     }
 
+    // Get scan history (demo)
+    if (url.pathname === "/history" && request.method === "GET") {
+      const history = [
+        { id: 1, item: "Tomat", status: "fresh", date: "2024-01-15" },
+        { id: 2, item: "Bayam", status: "soon", date: "2024-01-14" },
+        { id: 3, item: "Wortel", status: "critical", date: "2024-01-13" },
+      ];
+      return new Response(JSON.stringify(history), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
+    }
+
+    // Get expiry items (demo)
+    if (url.pathname === "/expiry" && request.method === "GET") {
+      const expiry = inventory.filter(item => item.expiry_days <= 3);
+      return new Response(JSON.stringify(expiry), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
+    }
+
     // ============================================
     // AI CHAT ENDPOINT
     // ============================================
