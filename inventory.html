@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory - NoFTe</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <img src="assets/logo.png" class="logo-icon" alt="Logo">
+                <span class="logo-text">NoFTe</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="index.html" class="nav-item">
+                <span class="nav-icon">&#127968;</span>
+                <span class="nav-label">Dashboard</span>
+            </a>
+            <a href="scan.html" class="nav-item">
+                <span class="nav-icon">&#128247;</span>
+                <span class="nav-label">Scan Makanan</span>
+            </a>
+            <a href="history.html" class="nav-item">
+                <span class="nav-icon">&#128196;</span>
+                <span class="nav-label">Riwayat</span>
+            </a>
+            <a href="expiry.html" class="nav-item">
+                <span class="nav-icon">&#9200;</span>
+                <span class="nav-label">Kadaluarsa</span>
+            </a>
+            <a href="inventory.html" class="nav-item active">
+                <span class="nav-icon">&#128230;</span>
+                <span class="nav-label">Inventory</span>
+            </a>
+            <a href="assistant.html" class="nav-item">
+                <span class="nav-icon">&#129302;</span>
+                <span class="nav-label">AI Assistant</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="settings.html" class="nav-item">
+                <span class="nav-icon">&#9881;</span>
+                <span class="nav-label">Pengaturan</span>
+            </a>
+            <div class="user-card">
+                <div class="user-avatar">C</div>
+                <div class="user-info">
+                    <h4>Chesta</h4>
+                    <p>Premium User</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <header class="header">
+            <div class="mobile-header">
+                <button class="menu-toggle" onclick="toggleSidebar()">&#9776;</button>
+            </div>
+            <div class="header-left">
+                <h1>&#128230; Inventory</h1>
+                <p>Kelola stok makanan dengan AI</p>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn">&#128269;</button>
+                <button class="icon-btn notification-btn" id="notificationBtn">
+                    &#128276;
+                    <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- NOTIFICATION DROPDOWN -->
+        <div class="notification-dropdown" id="notificationDropdown">
+            <div class="notification-header">
+                <h3>&#9888; Peringatan Kadaluarsa</h3>
+                <span class="notification-count" id="notificationCount">0</span>
+            </div>
+            <div class="notification-list" id="notificationList">
+                <div class="notification-empty">
+                    <div class="notification-empty-icon">&#8987;</div>
+                    <p>Memuat...</p>
+                </div>
+            </div>
+            <div class="notification-footer">
+                <a href="expiry.html">Lihat semua &#8594;</a>
+            </div>
+        </div>
+
+        <!-- PAGE CONTENT -->
+        <div class="page-content">
+
+            <!-- RECOMMENDATIONS -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>&#128161; Rekomendasi AI</h2>
+                </div>
+                <div id="recommendationList">
+                    <div class="rec-item urgent">
+                        <span class="rec-icon">&#8987;</span>
+                        <div class="rec-content">
+                            <h4>Memuat...</h4>
+                            <p>AI sedang menganalisis inventory Anda</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ADD FORM -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>&#10133; Tambah Item</h2>
+                    <span class="badge badge-primary">AI estimasi otomatis</span>
+                </div>
+
+                <form id="inventoryForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nama Makanan</label>
+                            <input type="text" id="itemName" placeholder="cth: Tomat" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Jumlah</label>
+                            <input type="number" id="itemQty" placeholder="5" min="1" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Satuan</label>
+                            <input type="text" id="itemUnit" placeholder="Buah" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Tanggal Simpan</label>
+                            <input type="date" id="itemDate" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">&#10133; Tambah ke Inventory</button>
+                    <p id="inventoryMessage" style="margin-top: 16px; font-size: 14px;"></p>
+                </form>
+            </div>
+
+            <!-- INVENTORY LIST -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>&#128203; Inventory Saat Ini</h2>
+                    <span class="badge badge-success">AI Tracking</span>
+                </div>
+                <div id="inventoryGrid" class="inventory-grid">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+
+            <!-- WASTE CALCULATOR -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>&#128202; Kalkulator Limbah</h2>
+                    <span class="badge badge-success">-42% Hemat</span>
+                </div>
+                <div class="analytics-grid">
+                    <div class="analytics-stat">
+                        <div class="analytics-stat-value" id="calcFoodSaved">0 kg</div>
+                        <div class="analytics-stat-label">Diselamatkan</div>
+                    </div>
+                    <div class="analytics-stat">
+                        <div class="analytics-stat-value" style="color: var(--success);">-42%</div>
+                        <div class="analytics-stat-label">Pengurangan</div>
+                    </div>
+                    <div class="analytics-stat">
+                        <div class="analytics-stat-value" id="calcMealsPrevented">~0</div>
+                        <div class="analytics-stat-label">Porsi Dicegah</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script src="config.js"></script>
+<script src="auth.js"></script>
+<script src="inventory.js"></script>
+<script src="notifications.js"></script>
+<script>
+// Apply saved theme on load
+(function() {
+    const savedTheme = localStorage.getItem('nofte-theme') || 'dark';
+    if (savedTheme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+})();
+
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
+}
+
+document.getElementById('sidebarOverlay').addEventListener('click', function() {
+    this.classList.remove('active');
+    document.getElementById('sidebar').classList.remove('open');
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const dateInput = document.getElementById('itemDate');
+    if (dateInput) dateInput.valueAsDate = new Date();
+});
+
+function generateRecommendations(items) {
+    const container = document.getElementById('recommendationList');
+    if (!container) return;
+
+    if (!items || !items.length) {
+        container.innerHTML = `
+            <div class="rec-item">
+                <span class="rec-icon">&#128230;</span>
+                <div class="rec-content">
+                    <h4>Inventory Kosong</h4>
+                    <p>Tambahkan makanan untuk rekomendasi AI</p>
+                </div>
+            </div>`;
+        return;
+    }
+
+    const sorted = [...items].sort((a, b) => (a.expiry_days || 0) - (b.expiry_days || 0));
+    const urgent = sorted.filter(i => (i.expiry_days || 0) <= 3);
+    const warning = sorted.filter(i => (i.expiry_days || 0) > 3 && (i.expiry_days || 0) <= 7);
+
+    let html = '';
+
+    if (urgent.length) {
+        html += `<div class="rec-item urgent">
+            <span class="rec-icon">&#128293;</span>
+            <div class="rec-content">
+                <h4>Konsumsi Sekarang</h4>
+                <p>${urgent.map(i => `${i.name} (${i.expiry_days} hari)`).join(', ')}</p>
+                <span class="rec-suggestion">&#10140; Gunakan dalam menu hari ini</span>
+            </div>
+        </div>`;
+    }
+
+    if (warning.length) {
+        html += `<div class="rec-item warning">
+            <span class="rec-icon">&#9888;</span>
+            <div class="rec-content">
+                <h4>Rencanakan Penggunaan</h4>
+                <p>${warning.slice(0, 3).map(i => `${i.name} (${i.expiry_days} hari)`).join(', ')}</p>
+                <span class="rec-suggestion">&#10140; Masukkan dalam menu minggu ini</span>
+            </div>
+        </div>`;
+    }
+
+    container.innerHTML = html;
+}
+
+function updateWasteCalculator(items) {
+    if (!items) return;
+    const urgent = items.filter(i => (i.expiry_days || 0) <= 3).length;
+    const foodSaved = (urgent * 0.4 + (items.length - urgent) * 0.2).toFixed(1);
+    document.getElementById('calcFoodSaved').textContent = `${foodSaved} kg`;
+    document.getElementById('calcMealsPrevented').textContent = `~${Math.round(urgent * 1.5)}`;
+}
+</script>
+
+</body>
+</html>

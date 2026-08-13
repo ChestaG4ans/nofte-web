@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kadaluarsa - NoFTe</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <img src="assets/logo.png" class="logo-icon" alt="Logo">
+                <span class="logo-text">NoFTe</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="index.html" class="nav-item">
+                <span class="nav-icon">&#127968;</span>
+                <span class="nav-label">Dashboard</span>
+            </a>
+            <a href="scan.html" class="nav-item">
+                <span class="nav-icon">&#128247;</span>
+                <span class="nav-label">Scan Makanan</span>
+            </a>
+            <a href="history.html" class="nav-item">
+                <span class="nav-icon">&#128196;</span>
+                <span class="nav-label">Riwayat</span>
+            </a>
+            <a href="expiry.html" class="nav-item active">
+                <span class="nav-icon">&#9200;</span>
+                <span class="nav-label">Kadaluarsa</span>
+            </a>
+            <a href="inventory.html" class="nav-item">
+                <span class="nav-icon">&#128230;</span>
+                <span class="nav-label">Inventory</span>
+            </a>
+            <a href="assistant.html" class="nav-item">
+                <span class="nav-icon">&#129302;</span>
+                <span class="nav-label">AI Assistant</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="settings.html" class="nav-item">
+                <span class="nav-icon">&#9881;</span>
+                <span class="nav-label">Pengaturan</span>
+            </a>
+            <div class="user-card">
+                <div class="user-avatar">C</div>
+                <div class="user-info">
+                    <h4>Chesta</h4>
+                    <p>Premium User</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <header class="header">
+            <div class="mobile-header">
+                <button class="menu-toggle" onclick="toggleSidebar()">&#9776;</button>
+            </div>
+            <div class="header-left">
+                <h1>&#9200; Kadaluarsa</h1>
+                <p>Pantau umur simpan makanan Anda</p>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn">&#128269;</button>
+                <button class="icon-btn notification-btn" id="notificationBtn">
+                    &#128276;
+                    <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- NOTIFICATION DROPDOWN -->
+        <div class="notification-dropdown" id="notificationDropdown">
+            <div class="notification-header">
+                <h3>&#9888; Peringatan Kadaluarsa</h3>
+                <span class="notification-count" id="notificationCount">0</span>
+            </div>
+            <div class="notification-list" id="notificationList">
+                <div class="notification-empty">
+                    <div class="notification-empty-icon">&#8987;</div>
+                    <p>Memuat...</p>
+                </div>
+            </div>
+            <div class="notification-footer">
+                <a href="expiry.html">Lihat semua &#8594;</a>
+            </div>
+        </div>
+
+        <!-- PAGE CONTENT -->
+        <div class="page-content">
+
+            <!-- STATS -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">&#128293;</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Kritis</div>
+                        <div class="stat-value" id="statCritical">0</div>
+                        <div class="stat-change">Gunakan hari ini</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">&#9888;</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Peringatan</div>
+                        <div class="stat-value" id="statWarning">0</div>
+                        <div class="stat-change">&#8804; 3 hari</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">&#10004;</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Aman</div>
+                        <div class="stat-value" id="statSafe">0</div>
+                        <div class="stat-change">> 3 hari</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">&#127793;</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Limbah Dicegah</div>
+                        <div class="stat-value">12.4 kg</div>
+                        <div class="stat-change">-42% pengurangan</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI EXPLANATION -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>&#129504; Estimasi AI</h2>
+                    <span class="badge badge-primary">Powered by AI</span>
+                </div>
+                <p style="color: var(--text-secondary); font-size: 14px; line-height: 1.7;">
+                    Estimasi umur simpan dihitung dari analisis gambar (warna, tekstur), jenis makanan, dan kondisi penyimpanan.
+                </p>
+            </div>
+
+            <!-- EXPIRY LIST -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>&#128203; Daftar Makanan</h2>
+                    <span class="badge badge-success">Urgensi</span>
+                </div>
+                <div class="expiry-list" id="expiryGrid">
+                    <!-- Dynamic content -->
+                </div>
+            </div>
+
+            <!-- WASTE IMPACT -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>&#127793; Dampak Pencegahan Limbah</h2>
+                    <span class="badge badge-success">Bulan Ini</span>
+                </div>
+                <div class="analytics-grid">
+                    <div class="analytics-stat">
+                        <div class="analytics-stat-value" style="color: var(--success);">12.4 kg</div>
+                        <div class="analytics-stat-label">Diselamatkan</div>
+                    </div>
+                    <div class="analytics-stat">
+                        <div class="analytics-stat-value" style="color: var(--success);">-42%</div>
+                        <div class="analytics-stat-label">Pengurangan</div>
+                    </div>
+                    <div class="analytics-stat">
+                        <div class="analytics-stat-value" style="color: var(--success);">Rp 186K</div>
+                        <div class="analytics-stat-label">Dihemat</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script src="config.js"></script>
+<script src="auth.js"></script>
+<script src="expiry.js"></script>
+<script src="notifications.js"></script>
+<script>
+// Apply saved theme on load
+(function() {
+    const savedTheme = localStorage.getItem('nofte-theme') || 'dark';
+    if (savedTheme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+})();
+
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
+}
+
+document.getElementById('sidebarOverlay').addEventListener('click', function() {
+    this.classList.remove('active');
+    document.getElementById('sidebar').classList.remove('open');
+});
+</script>
+
+</body>
+</html>

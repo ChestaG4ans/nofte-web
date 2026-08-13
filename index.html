@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - NoFTe</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <img src="assets/logo.png" class="logo-icon" alt="Logo">
+                <span class="logo-text">NoFTe</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="index.html" class="nav-item active">
+                <span class="nav-icon">&#127968;</span>
+                <span class="nav-label">Dashboard</span>
+            </a>
+            <a href="scan.html" class="nav-item">
+                <span class="nav-icon">&#128247;</span>
+                <span class="nav-label">Scan Makanan</span>
+            </a>
+            <a href="history.html" class="nav-item">
+                <span class="nav-icon">&#128196;</span>
+                <span class="nav-label">Riwayat</span>
+            </a>
+            <a href="expiry.html" class="nav-item">
+                <span class="nav-icon">&#9200;</span>
+                <span class="nav-label">Kadaluarsa</span>
+            </a>
+            <a href="inventory.html" class="nav-item">
+                <span class="nav-icon">&#128230;</span>
+                <span class="nav-label">Inventory</span>
+            </a>
+            <a href="assistant.html" class="nav-item">
+                <span class="nav-icon">&#129302;</span>
+                <span class="nav-label">AI Assistant</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="settings.html" class="nav-item">
+                <span class="nav-icon">&#9881;</span>
+                <span class="nav-label">Pengaturan</span>
+            </a>
+            <div class="user-card">
+                <div class="user-avatar">C</div>
+                <div class="user-info">
+                    <h4>Chesta</h4>
+                    <p>Premium User</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <header class="header">
+            <div class="mobile-header">
+                <button class="menu-toggle" onclick="toggleSidebar()">&#9776;</button>
+            </div>
+            <div class="header-left">
+                <h1>Selamat Datang, Chesta &#128075;</h1>
+                <p>Pantau kesegaran makanan dengan AI</p>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn">&#128269;</button>
+                <button class="icon-btn notification-btn" id="notificationBtn">
+                    &#128276;
+                    <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- NOTIFICATION DROPDOWN -->
+        <div class="notification-dropdown" id="notificationDropdown">
+            <div class="notification-header">
+                <h3>&#9888; Peringatan Kadaluarsa</h3>
+                <span class="notification-count" id="notificationCount">0</span>
+            </div>
+            <div class="notification-list" id="notificationList">
+                <div class="notification-empty">
+                    <div class="notification-empty-icon">&#8987;</div>
+                    <p>Memuat...</p>
+                </div>
+            </div>
+            <div class="notification-footer">
+                <a href="expiry.html">Lihat semua &#8594;</a>
+            </div>
+        </div>
+
+        <!-- PAGE CONTENT -->
+        <div class="page-content">
+
+            <!-- STATS -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">&#128247;</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Total Scan</div>
+                        <div class="stat-value" id="statTotalScan">0</div>
+                        <div class="stat-change">&#9650; +12 bulan ini</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">&#127822;</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Segar Terdeteksi</div>
+                        <div class="stat-value" id="statSafeFood">0</div>
+                        <div class="stat-change">Hasil AI</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">&#128293;</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Aksi Prioritas</div>
+                        <div class="stat-value" id="statExpiring">0</div>
+                        <div class="stat-change">Perlu perhatian</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">&#127793;</div>
+                    <div class="stat-content">
+                        <div class="stat-label">Limbah Dihemat</div>
+                        <div class="stat-value">12.4 kg</div>
+                        <div class="stat-change">-42% vs bulan lalu</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MAIN GRID -->
+            <div class="grid-2">
+
+                <!-- FRESHNESS SCORE -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>&#127822; Skor Kesegaran</h2>
+                        <span class="badge badge-primary">AI Powered</span>
+                    </div>
+                    <div class="freshness-container">
+                        <div class="freshness-circle">
+                            <div class="freshness-ring"></div>
+                            <div class="freshness-inner">
+                                <span class="freshness-value" id="freshnessScore">87</span>
+                                <span class="freshness-label">dari 100</span>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; color: var(--text-secondary); font-size: 14px;">
+                        Kesegaran dapur sangat baik. <strong style="color: var(--warning);">3 item</strong> butuh perhatian.
+                    </p>
+                </div>
+
+                <!-- WASTE ANALYTICS -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2>&#128202; Analisis Limbah</h2>
+                        <span class="badge badge-success">-42%</span>
+                    </div>
+                    <div class="analytics-hero">
+                        <span class="analytics-percentage">-42%</span>
+                        <span class="analytics-label">Pengurangan Limbah Makanan</span>
+                    </div>
+                    <div class="analytics-grid">
+                        <div class="analytics-stat">
+                            <div class="analytics-stat-value">12.4 kg</div>
+                            <div class="analytics-stat-label">Dicegah</div>
+                        </div>
+                        <div class="analytics-stat">
+                            <div class="analytics-stat-value">Rp 186K</div>
+                            <div class="analytics-stat-label">Dihemat</div>
+                        </div>
+                        <div class="analytics-stat">
+                            <div class="analytics-stat-value">23</div>
+                            <div class="analytics-stat-label">Diselamatkan</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RECOMMENDATIONS -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>&#128161; Rekomendasi Prioritas</h2>
+                </div>
+                <div class="rec-item urgent">
+                    <span class="rec-icon">&#127813;</span>
+                    <div class="rec-content">
+                        <h4>Tomat - Konsumsi Hari Ini</h4>
+                        <p>Sisa umur simpan: <strong>1 hari</strong>. Kualitas akan turun 60% besok.</p>
+                        <span class="rec-suggestion">&#10140; Saran: Sup atau salad tomat</span>
+                    </div>
+                </div>
+                <div class="rec-item warning">
+                    <span class="rec-icon">&#127820;</span>
+                    <div class="rec-content">
+                        <h4>Pisang - Gunakan 3 Hari Ini</h4>
+                        <p>Sisa umur simpan: <strong>3 hari</strong>. AI sarankan smoothie atau kue pisang.</p>
+                        <span class="rec-suggestion">&#10140; Saran: Pancake pisang atau smoothie</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MENU SUGGESTIONS -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>&#127869; Menu Hari Ini</h2>
+                    <span class="badge badge-warning">Based Expiring</span>
+                </div>
+                <div class="menu-grid">
+                    <div class="menu-card">
+                        <span class="menu-time">&#127774; Sarapan</span>
+                        <h4>Banana Smoothie Bowl</h4>
+                        <p>2 Pisang (expire 3 hari)</p>
+                        <span class="calories">~250 kkal</span>
+                    </div>
+                    <div class="menu-card">
+                        <span class="menu-time">&#9728; Makan Siang</span>
+                        <h4>Salad Tomat Segar</h4>
+                        <p>3 Tomat (expire 1 hari)</p>
+                        <span class="calories">~120 kkal</span>
+                    </div>
+                    <div class="menu-card">
+                        <span class="menu-time">&#127769; Makan Malam</span>
+                        <h4>Ikan Bakar + Brokoli</h4>
+                        <p>Stok item</p>
+                        <span class="calories">~450 kkal</span>
+                    </div>
+                    <div class="menu-card">
+                        <span class="menu-time">&#127861; Snack</span>
+                        <h4>Jus Wortel Segar</h4>
+                        <p>3 Wortel (expire 5 hari)</p>
+                        <span class="calories">~85 kkal</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RECENT & INVENTORY -->
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h2>&#128247; Scan Terakhir</h2>
+                        <a href="history.html" style="color: var(--primary); font-size: 13px;">Lihat semua &#8594;</a>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-icon">&#127813;</div>
+                        <div class="list-info">
+                            <h4>Tomat</h4>
+                            <span>Segar - 1 hari lagi</span>
+                        </div>
+                        <span class="badge badge-danger">1 Hari</span>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-icon">&#127820;</div>
+                        <div class="list-info">
+                            <h4>Pisang</h4>
+                            <span>Segar - 3 hari lagi</span>
+                        </div>
+                        <span class="badge badge-warning">3 Hari</span>
+                    </div>
+                    <div class="list-item">
+                        <div class="list-icon">&#127822;</div>
+                        <div class="list-info">
+                            <h4>Apel</h4>
+                            <span>Segar - 7 hari lagi</span>
+                        </div>
+                        <span class="badge badge-success">7 Hari</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2>&#128230; Inventory</h2>
+                        <a href="inventory.html" style="color: var(--primary); font-size: 13px;">Kelola &#8594;</a>
+                    </div>
+                    <div class="inventory-grid" id="inventoryPreview">
+                        <div class="inventory-card">
+                            <span class="inventory-icon">&#127822;</span>
+                            <h3>Apel</h3>
+                            <span>5 items</span>
+                        </div>
+                        <div class="inventory-card">
+                            <span class="inventory-icon">&#127813;</span>
+                            <h3>Tomat</h3>
+                            <span>3 items</span>
+                        </div>
+                        <div class="inventory-card">
+                            <span class="inventory-icon">&#127968;</span>
+                            <h3>Susu</h3>
+                            <span>2 kotak</span>
+                        </div>
+                        <div class="inventory-card">
+                            <span class="inventory-icon">&#127820;</span>
+                            <h3>Pisang</h3>
+                            <span>8 items</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</div>
+
+<script src="config.js"></script>
+<script src="auth.js"></script>
+<script src="dashboard.js"></script>
+<script src="notifications.js"></script>
+<script>
+// Apply saved theme on load
+(function() {
+    const savedTheme = localStorage.getItem('nofte-theme') || 'dark';
+    if (savedTheme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+})();
+
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
+}
+
+document.getElementById('sidebarOverlay').addEventListener('click', function() {
+    this.classList.remove('active');
+    document.getElementById('sidebar').classList.remove('open');
+});
+</script>
+
+</body>
+</html>

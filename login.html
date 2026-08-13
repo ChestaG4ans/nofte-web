@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - NoFTe</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .auth-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .auth-logo {
+            width: 64px;
+            height: 64px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 16px;
+        }
+
+        .auth-title {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .auth-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .auth-form label {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .auth-form input {
+            width: 100%;
+            padding: 14px 18px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .auth-form input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .auth-message {
+            text-align: center;
+            font-size: 13px;
+            min-height: 20px;
+            padding: 8px;
+            border-radius: var(--radius-sm);
+        }
+
+        .auth-message.error {
+            color: var(--danger);
+            background: var(--danger-bg);
+        }
+
+        .auth-message.success {
+            color: var(--success);
+            background: var(--success-bg);
+        }
+
+        .auth-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary), #A855F7);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .auth-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--primary-glow);
+        }
+
+        .auth-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .auth-switch {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .auth-switch a {
+            color: var(--primary);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="auth-header">
+            <img src="assets/logo.png" class="auth-logo" alt="NoFTe Logo">
+            <h1 class="auth-title" id="authTitle">Login</h1>
+            <p class="auth-subtitle" id="authSubtitle">Masuk untuk melanjutkan ke NoFTe</p>
+        </div>
+
+        <form class="auth-form" id="authForm">
+            <div id="nameWrap" style="display: none;">
+                <label for="nameInput">Nama Lengkap</label>
+                <input id="nameInput" type="text" placeholder="Masukkan nama kamu">
+            </div>
+
+            <div>
+                <label for="emailInput">Email</label>
+                <input id="emailInput" type="email" placeholder="email@contoh.com" required>
+            </div>
+
+            <div>
+                <label for="passwordInput">Password</label>
+                <input id="passwordInput" type="password" placeholder="Minimal 8 karakter" required>
+            </div>
+
+            <div class="auth-message" id="authMessage"></div>
+
+            <button type="submit" class="auth-btn" id="submitAuthBtn">Login</button>
+        </form>
+
+        <p class="auth-switch">
+            <span id="switchLabel">Belum punya akun?</span>
+            <a id="switchAuthMode">Daftar</a>
+        </p>
+    </div>
+</div>
+
+<script src="config.js"></script>
+<script src="auth.js"></script>
+<script>
+// Apply saved theme on load
+(function() {
+    const savedTheme = localStorage.getItem('nofte-theme') || 'dark';
+    if (savedTheme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+    }
+})();
+
+let isRegisterMode = false;
+
+const authTitle = document.getElementById("authTitle");
+const authSubtitle = document.getElementById("authSubtitle");
+const nameWrap = document.getElementById("nameWrap");
+const nameInput = document.getElementById("nameInput");
+const emailInput = document.getElementById("emailInput");
+const passwordInput = document.getElementById("passwordInput");
+const authMessage = document.getElementById("authMessage");
+const submitAuthBtn = document.getElementById("submitAuthBtn");
+const switchLabel = document.getElementById("switchLabel");
+const switchAuthMode = document.getElementById("switchAuthMode");
+const authForm = document.getElementById("authForm");
+
+// Redirect if already logged in
+if (getToken()) {
+    window.location.href = "index.html";
+}
+
+switchAuthMode.addEventListener("click", (e) => {
+    e.preventDefault();
+    isRegisterMode = !isRegisterMode;
+    renderMode();
+});
+
+authForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    await submitAuth();
+});
+
+function renderMode() {
+    if (isRegisterMode) {
+        authTitle.innerText = "Daftar";
+        authSubtitle.innerText = "Buat akun baru untuk mulai menggunakan NoFTe";
+        nameWrap.style.display = "block";
+        submitAuthBtn.innerText = "Daftar";
+        switchLabel.innerText = "Sudah punya akun?";
+        switchAuthMode.innerText = "Login";
+    } else {
+        authTitle.innerText = "Login";
+        authSubtitle.innerText = "Masuk untuk melanjutkan ke NoFTe";
+        nameWrap.style.display = "none";
+        submitAuthBtn.innerText = "Login";
+        switchLabel.innerText = "Belum punya akun?";
+        switchAuthMode.innerText = "Daftar";
+    }
+    authMessage.innerText = "";
+    authMessage.className = "auth-message";
+}
+
+async function submitAuth() {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+    const name = nameInput.value.trim();
+
+    if (!email || !password) {
+        showMessage("Email dan password wajib diisi.", "error");
+        return;
+    }
+
+    if (password.length < 8) {
+        showMessage("Password minimal 8 karakter.", "error");
+        return;
+    }
+
+    if (isRegisterMode && !name) {
+        showMessage("Nama wajib diisi untuk pendaftaran.", "error");
+        return;
+    }
+
+    submitAuthBtn.disabled = true;
+    showMessage(isRegisterMode ? "Memproses pendaftaran..." : "Memproses login...", "");
+
+    try {
+        // Backend API URL
+        const BACKEND_URL = "http://localhost:8000";
+
+        if (isRegisterMode) {
+            // Register first
+            const registerResponse = await fetch(`${BACKEND_URL}/auth/register`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    password: password
+                })
+            });
+
+            if (!registerResponse.ok) {
+                const err = await registerResponse.json();
+                throw new Error(err.detail || "Registrasi gagal.");
+            }
+
+            showMessage("Registrasi berhasil. Melakukan login...", "success");
+        }
+
+        // Then login
+        const loginResponse = await fetch(`${BACKEND_URL}/auth/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+        });
+
+        if (!loginResponse.ok) {
+            const err = await loginResponse.json();
+            throw new Error(err.detail || "Login gagal.");
+        }
+
+        const loginData = await loginResponse.json();
+        setToken(loginData.access_token);
+
+        showMessage("Berhasil! Mengarahkan...", "success");
+
+        // Fetch user info
+        try {
+            const userResponse = await fetch(`${BACKEND_URL}/auth/me`, {
+                headers: { "Authorization": `Bearer ${loginData.access_token}` }
+            });
+            if (userResponse.ok) {
+                const userData = await userResponse.json();
+                setUser(userData);
+            }
+        } catch (e) {
+            console.log("Could not fetch user info");
+        }
+
+        setTimeout(() => {
+            window.location.href = "index.html";
+        }, 500);
+
+    } catch (error) {
+        showMessage(error.message || "Terjadi kesalahan. Pastikan backend NoFTe berjalan di port 8000.", "error");
+        submitAuthBtn.disabled = false;
+    }
+}
+
+function showMessage(text, type) {
+    authMessage.innerText = text;
+    authMessage.className = "auth-message " + type;
+}
+
+renderMode();
+</script>
+
+</body>
+</html>

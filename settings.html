@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengaturan - NoFTe</title>
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <img src="assets/logo.png" class="logo-icon" alt="Logo">
+                <span class="logo-text">NoFTe</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="index.html" class="nav-item">
+                <span class="nav-icon">&#127968;</span>
+                <span class="nav-label">Dashboard</span>
+            </a>
+            <a href="scan.html" class="nav-item">
+                <span class="nav-icon">&#128247;</span>
+                <span class="nav-label">Scan Makanan</span>
+            </a>
+            <a href="history.html" class="nav-item">
+                <span class="nav-icon">&#128196;</span>
+                <span class="nav-label">Riwayat</span>
+            </a>
+            <a href="expiry.html" class="nav-item">
+                <span class="nav-icon">&#9200;</span>
+                <span class="nav-label">Kadaluarsa</span>
+            </a>
+            <a href="inventory.html" class="nav-item">
+                <span class="nav-icon">&#128230;</span>
+                <span class="nav-label">Inventory</span>
+            </a>
+            <a href="assistant.html" class="nav-item">
+                <span class="nav-icon">&#129302;</span>
+                <span class="nav-label">AI Assistant</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="settings.html" class="nav-item active">
+                <span class="nav-icon">&#9881;</span>
+                <span class="nav-label">Pengaturan</span>
+            </a>
+            <div class="user-card">
+                <div class="user-avatar">C</div>
+                <div class="user-info">
+                    <h4>Chesta</h4>
+                    <p>Premium User</p>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        <!-- HEADER -->
+        <header class="header">
+            <div class="mobile-header">
+                <button class="menu-toggle" onclick="toggleSidebar()">&#9776;</button>
+            </div>
+            <div class="header-left">
+                <h1>&#9881; Pengaturan</h1>
+                <p>Kelola akun dan preferensi Anda</p>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn">&#128269;</button>
+                <button class="icon-btn notification-btn" id="notificationBtn">
+                    &#128276;
+                    <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- NOTIFICATION DROPDOWN -->
+        <div class="notification-dropdown" id="notificationDropdown">
+            <div class="notification-header">
+                <h3>&#9888; Peringatan Kadaluarsa</h3>
+                <span class="notification-count" id="notificationCount">0</span>
+            </div>
+            <div class="notification-list" id="notificationList">
+                <div class="notification-empty">
+                    <div class="notification-empty-icon">&#8987;</div>
+                    <p>Memuat...</p>
+                </div>
+            </div>
+            <div class="notification-footer">
+                <a href="expiry.html">Lihat semua &#8594;</a>
+            </div>
+        </div>
+
+        <!-- PAGE CONTENT -->
+        <div class="page-content" style="max-width: 800px;">
+
+            <!-- Profile -->
+            <div class="settings-profile" onclick="editProfile()">
+                <div class="user-avatar" style="width: 64px; height: 64px; font-size: 28px;">C</div>
+                <div class="user-info" style="flex: 1;">
+                    <h4 style="font-size: 18px; font-weight: 700;">Chesta</h4>
+                    <p>chesta@email.com</p>
+                </div>
+                <span style="color: var(--text-muted); font-size: 20px;">&#8250;</span>
+            </div>
+
+            <!-- General Settings -->
+            <div class="settings-section">
+                <div class="settings-item" onclick="openLanguageModal()">
+                    <div class="settings-item-left">
+                        <div class="settings-icon">&#127760;</div>
+                        <span class="settings-label">Bahasa</span>
+                    </div>
+                    <span class="settings-value">Indonesia &#8250;</span>
+                </div>
+                <div class="settings-item" onclick="toggleTheme()">
+                    <div class="settings-item-left">
+                        <div class="settings-icon" id="themeIcon">&#127769;</div>
+                        <span class="settings-label">Tema</span>
+                    </div>
+                    <span class="settings-value" id="themeValue">Gelap</span>
+                </div>
+                <div class="settings-item">
+                    <div class="settings-item-left">
+                        <div class="settings-icon">&#128276;</div>
+                        <span class="settings-label">Notifikasi</span>
+                    </div>
+                    <label class="toggle">
+                        <input type="checkbox" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- More Settings -->
+            <div class="settings-section">
+                <div class="settings-item">
+                    <div class="settings-item-left">
+                        <div class="settings-icon">&#9432;</div>
+                        <span class="settings-label">Tentang</span>
+                    </div>
+                    <span style="color: var(--text-muted);">&#8250;</span>
+                </div>
+                <div class="settings-item">
+                    <div class="settings-item-left">
+                        <div class="settings-icon">&#10067;</div>
+                        <span class="settings-label">Bantuan</span>
+                    </div>
+                    <span style="color: var(--text-muted);">&#8250;</span>
+                </div>
+                <div class="settings-item">
+                    <div class="settings-item-left">
+                        <div class="settings-icon">&#11088;</div>
+                        <span class="settings-label">Beri Rating</span>
+                    </div>
+                    <span style="color: var(--text-muted);">&#8250;</span>
+                </div>
+            </div>
+
+            <!-- Logout -->
+            <div class="settings-section">
+                <div class="settings-item" onclick="logout()" style="cursor: pointer;">
+                    <div class="settings-item-left">
+                        <div class="settings-icon" style="background: var(--danger-bg); color: var(--danger);">&#128715;</div>
+                        <span class="settings-label" style="color: var(--danger);">Keluar</span>
+                    </div>
+                </div>
+            </div>
+
+            <p style="text-align: center; color: var(--text-muted); font-size: 13px; margin-top: 24px;">
+                Versi 1.0.0 &#8226; NoFTe AI
+            </p>
+
+        </div>
+    </main>
+</div>
+
+<!-- Language Modal -->
+<div class="sidebar-overlay" id="languageModal" style="display: none; align-items: center; justify-content: center; background: rgba(0,0,0,0.7);">
+    <div style="background: var(--bg-card); border-radius: var(--radius-xl); padding: 28px; width: 90%; max-width: 360px; border: 1px solid var(--border);">
+        <h3 style="margin-bottom: 20px; font-size: 20px; font-weight: 700;">Pilih Bahasa</h3>
+        <div onclick="selectLanguage('Indonesia')" style="padding: 16px 20px; border-radius: var(--radius-md); cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: var(--bg-tertiary); margin-bottom: 10px; border: 1px solid var(--border);">
+            <span>&#127463;&#127465; Indonesia</span>
+            <span style="color: var(--success);">&#10003;</span>
+        </div>
+        <div onclick="selectLanguage('English')" style="padding: 16px 20px; border-radius: var(--radius-md); cursor: pointer; display: flex; justify-content: space-between; align-items: center; background: var(--bg-tertiary); border: 1px solid var(--border);">
+            <span>&#127468;&#127463; English</span>
+        </div>
+        <button onclick="closeLanguageModal()" class="btn btn-secondary" style="width: 100%; margin-top: 20px;">Tutup</button>
+    </div>
+</div>
+
+<script src="config.js"></script>
+<script src="auth.js"></script>
+<script src="notifications.js"></script>
+<script>
+// Apply saved theme on load
+function applyTheme(theme) {
+    if (theme === 'light') {
+        document.documentElement.setAttribute('data-theme', 'light');
+    } else {
+        document.documentElement.removeAttribute('data-theme');
+    }
+}
+
+// Initialize theme
+let currentTheme = localStorage.getItem('nofte-theme') || 'dark';
+applyTheme(currentTheme);
+updateThemeUI();
+
+function toggleTheme() {
+    currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    localStorage.setItem('nofte-theme', currentTheme);
+    applyTheme(currentTheme);
+    updateThemeUI();
+}
+
+function updateThemeUI() {
+    document.getElementById('themeIcon').innerHTML = currentTheme === 'dark' ? '&#127769;' : '&#9728;';
+    document.getElementById('themeValue').textContent = currentTheme === 'dark' ? 'Gelap' : 'Terang';
+}
+
+function openLanguageModal() {
+    document.getElementById('languageModal').style.display = 'flex';
+}
+
+function closeLanguageModal() {
+    document.getElementById('languageModal').style.display = 'none';
+}
+
+function selectLanguage(lang) {
+    document.querySelector('.settings-item:first-child .settings-value').textContent = lang + ' ›';
+    closeLanguageModal();
+}
+
+function logout() {
+    if (confirm('Keluar dari akun?')) {
+        localStorage.clear();
+        window.location.href = 'login.html';
+    }
+}
+
+function editProfile() {
+    alert('Fitur edit profil akan segera hadir!');
+}
+
+function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebarOverlay').classList.toggle('active');
+}
+
+document.getElementById('sidebarOverlay').addEventListener('click', function() {
+    this.classList.remove('active');
+    document.getElementById('sidebar').classList.remove('open');
+});
+</script>
+
+</body>
+</html>
