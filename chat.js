@@ -1,16 +1,12 @@
 // Chat JavaScript - NOFTe AI Assistant
-// Connects to backend (localhost:3000 for dev, or Cloudflare Worker for production)
+// Connects to Cloudflare Worker
 
 const chatBox = document.getElementById("chatBox");
 const chatInput = document.getElementById("chatInput");
 const sendBtn = document.getElementById("sendBtn");
 
-// API URL - Use config or fallback to localhost for dev
-const CHAT_API_URL = typeof CONFIG !== 'undefined'
-    ? CONFIG.getChatUrl()
-    : (window.location.hostname === 'localhost'
-        ? "http://localhost:3000/api/chat"
-        : "/api/chat");
+// API URL - from auth.js
+const CHAT_API_URL = (window.API_URL || "https://nofte-api.chestaadabikarnen03.workers.dev") + "/api/chat";
 
 let isLoading = false;
 

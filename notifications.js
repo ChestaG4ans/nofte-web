@@ -1,14 +1,11 @@
 // NoFTe Notification System
-// Connects to backend at localhost:8000
+// Connects to Cloudflare Worker
 
 let expiringItems = [];
 let notificationCount = 0;
 
-// =========================
-// API CONFIG
-// =========================
-
-const API_BASE_URL = "http://localhost:8000";
+// API URL - from auth.js
+const API_BASE_URL = window.API_URL || "https://nofte-api.chestaadabikarnen03.workers.dev";
 
 function getToken() {
     return localStorage.getItem('nofte_access_token') || null;

@@ -200,6 +200,9 @@ const switchLabel = document.getElementById("switchLabel");
 const switchAuthMode = document.getElementById("switchAuthMode");
 const authForm = document.getElementById("authForm");
 
+// API URL from auth.js
+const API_URL = window.API_URL || "https://nofte-api.chestaadabikarnen03.workers.dev";
+
 // Redirect if already logged in
 if (getToken()) {
     window.location.href = "index.html";
@@ -259,18 +262,44 @@ async function submitAuth() {
     submitAuthBtn.disabled = true;
     showMessage(isRegisterMode ? "Memproses pendaftaran..." : "Memproses login...", "");
 
-    // Demo mode - save user data to localStorage
     try {
-        const demoUser = {
-            name: isRegisterMode ? name : email.split('@')[0],
-            email: email,
-            registeredAt: new Date().toISOString()
-        };
+        // Get API URL from auth.js
+        const apiUrl = window.API_URL || "https://nofte-api.chestaadabikarnen03.workers.dev";
 
-        setToken('demo_token_' + Date.now());
-        setUser(demoUser);
+        const endpoint = isRegisterMode ? '/api/auth/register' : '/api/auth/login';
+        const body = isRegisterMode
+            ? { name, email, password }
+            : { email, password };
 
-        showMessage(isRegisterMode ? "Registrasi berhasil (Demo)!" : "Login berhasil (Demo)!", "success");
+        const response = await fetch(`${apiUrl}${endpoint}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            throw new Error(data.detail || "Terjadi kesalahan");
+        }
+
+        // Save token
+        setToken(data.access_token);
+
+        // Get user info
+        try {
+            const userResponse = await fetch(`${apiUrl}/api/auth/me`, {
+                headers: { "Authorization": `Bearer ${data.access_token}` }
+            });
+            if (userResponse.ok) {
+                const userData = await userResponse.json();
+                setUser(userData);
+            }
+        } catch (e) {
+            console.log("Could not fetch user info");
+        }
+
+        showMessage("Berhasil! Mengarahkan...", "success");
 
         setTimeout(() => {
             window.location.href = "index.html";
