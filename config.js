@@ -2,10 +2,9 @@
 // Update these URLs after deploying to Cloudflare
 
 const CONFIG = {
-    // Backend API URLs
-    // For production: Change these to your Cloudflare Worker URL
-    API_URL: "https://nofte-api.chestagans.workers.dev", // TODO: Update with your Worker URL
-    CHAT_API_URL: "https://nofte-api.chestagans.workers.dev/api/chat", // TODO: Update with your Worker URL
+    // Backend API URLs - Cloudflare Worker
+    API_URL: "https://nofte-api.chestaadabikarnen03.workers.dev",
+    CHAT_API_URL: "https://nofte-api.chestaadabikarnen03.workers.dev/api/chat",
 
     // For local development, use localhost
     isLocal: window.location.hostname === 'localhost',
