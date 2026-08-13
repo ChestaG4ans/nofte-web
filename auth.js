@@ -1,8 +1,6 @@
 // NoFTe API Configuration
-// Backend server runs on localhost:8000
+// Uses CONFIG from config.js for API URLs
 
-const API_BASE_URL = "http://localhost:8000";
-const CHAT_API_URL = "http://localhost:3000";
 const TOKEN_KEY = "nofte_access_token";
 const USER_KEY = "nofte_user";
 
@@ -32,6 +30,13 @@ function setUser(user) {
     localStorage.setItem(USER_KEY, JSON.stringify(user));
 }
 
+// Make functions globally available
+window.getToken = getToken;
+window.setToken = setToken;
+window.getUser = getUser;
+window.setUser = setUser;
+window.clearToken = clearToken;
+
 // =========================
 // AUTH CHECK
 // =========================
@@ -52,34 +57,8 @@ function logout() {
     window.location.href = "login.html";
 }
 
-// =========================
-// API HELPERS
-// =========================
-
-async function apiRequest(endpoint, options = {}) {
-    const token = getToken();
-    const headers = {
-        'Content-Type': 'application/json',
-        ...options.headers
-    };
-
-    if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-    }
-
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-        ...options,
-        headers
-    });
-
-    // Handle 401 Unauthorized
-    if (response.status === 401) {
-        logout();
-        throw new Error('Session expired. Please login again.');
-    }
-
-    return response;
-}
+// Make logout globally available
+window.logout = logout;
 
 // Initialize auth check
 document.addEventListener('DOMContentLoaded', requireAuth);

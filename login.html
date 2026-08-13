@@ -259,66 +259,25 @@ async function submitAuth() {
     submitAuthBtn.disabled = true;
     showMessage(isRegisterMode ? "Memproses pendaftaran..." : "Memproses login...", "");
 
+    // Demo mode - save user data to localStorage
     try {
-        // Backend API URL
-        const BACKEND_URL = "http://localhost:8000";
+        const demoUser = {
+            name: isRegisterMode ? name : email.split('@')[0],
+            email: email,
+            registeredAt: new Date().toISOString()
+        };
 
-        if (isRegisterMode) {
-            // Register first
-            const registerResponse = await fetch(`${BACKEND_URL}/auth/register`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    name: name,
-                    email: email,
-                    password: password
-                })
-            });
+        setToken('demo_token_' + Date.now());
+        setUser(demoUser);
 
-            if (!registerResponse.ok) {
-                const err = await registerResponse.json();
-                throw new Error(err.detail || "Registrasi gagal.");
-            }
-
-            showMessage("Registrasi berhasil. Melakukan login...", "success");
-        }
-
-        // Then login
-        const loginResponse = await fetch(`${BACKEND_URL}/auth/login`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password })
-        });
-
-        if (!loginResponse.ok) {
-            const err = await loginResponse.json();
-            throw new Error(err.detail || "Login gagal.");
-        }
-
-        const loginData = await loginResponse.json();
-        setToken(loginData.access_token);
-
-        showMessage("Berhasil! Mengarahkan...", "success");
-
-        // Fetch user info
-        try {
-            const userResponse = await fetch(`${BACKEND_URL}/auth/me`, {
-                headers: { "Authorization": `Bearer ${loginData.access_token}` }
-            });
-            if (userResponse.ok) {
-                const userData = await userResponse.json();
-                setUser(userData);
-            }
-        } catch (e) {
-            console.log("Could not fetch user info");
-        }
+        showMessage(isRegisterMode ? "Registrasi berhasil (Demo)!" : "Login berhasil (Demo)!", "success");
 
         setTimeout(() => {
             window.location.href = "index.html";
         }, 500);
 
     } catch (error) {
-        showMessage(error.message || "Terjadi kesalahan. Pastikan backend NoFTe berjalan di port 8000.", "error");
+        showMessage(error.message || "Terjadi kesalahan.", "error");
         submitAuthBtn.disabled = false;
     }
 }
