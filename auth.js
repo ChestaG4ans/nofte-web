@@ -4,7 +4,7 @@
 const TOKEN_KEY = "nofte_access_token";
 const USER_KEY = "nofte_user";
 
-// Get API URL - always use Worker URL
+// API URL - hardcoded untuk production
 const API_URL = "https://nofte-api.chestaadabikarnen03.workers.dev";
 
 // =========================
@@ -33,49 +33,47 @@ function setUser(user) {
     localStorage.setItem(USER_KEY, JSON.stringify(user));
 }
 
-// Make functions globally available
+// Make globally available
 window.getToken = getToken;
 window.setToken = setToken;
 window.getUser = getUser;
 window.setUser = setUser;
 window.clearToken = clearToken;
 window.API_URL = API_URL;
+window.logout = logout;
 
 // =========================
-// AUTH CHECK
+// LOGOUT
 // =========================
-
-function requireAuth() {
-    // Get current page name
-    const pathParts = window.location.pathname.split('/');
-    const currentPage = pathParts[pathParts.length - 1] || 'index.html';
-
-    const publicPages = ['login.html', 'register.html', ''];
-
-    // If on public page, don't redirect
-    if (publicPages.includes(currentPage)) {
-        // If logged in and on login page, redirect to index
-        if (currentPage === 'login.html' && getToken()) {
-            window.location.href = 'index.html';
-        }
-        return true;
-    }
-
-    // If not logged in, redirect to login
-    if (!getToken()) {
-        window.location.href = 'login.html';
-        return false;
-    }
-
-    return true;
-}
 
 function logout() {
     clearToken();
-    window.location.href = 'login.html';
+    window.location.href = "login.html";
 }
 
-window.logout = logout;
+// =========================
+// SIMPLE AUTH CHECK
+// =========================
+
+function checkAuth() {
+    // Only redirect if NOT on login page AND no token
+    const onLoginPage = window.location.href.includes('login.html');
+
+    if (!onLoginPage && !getToken()) {
+        window.location.href = "login.html";
+    }
+}
+
+// Run auth check after page loads
+window.addEventListener('DOMContentLoaded', function() {
+    // Skip auth check on login page
+    if (window.location.href.includes('login.html')) {
+        return;
+    }
+
+    // Small delay to prevent loop
+    setTimeout(checkAuth, 100);
+});
 
 // =========================
 // API HELPERS
@@ -97,21 +95,12 @@ async function apiRequest(endpoint, options = {}) {
         headers
     });
 
-    // Handle 401 Unauthorized
+    // Handle 401 - redirect to login
     if (response.status === 401) {
-        logout();
-        throw new Error('Session expired. Please login again.');
+        clearToken();
+        window.location.href = "login.html";
+        throw new Error('Unauthorized');
     }
 
     return response;
 }
-
-// Initialize auth check - only on non-login pages
-document.addEventListener('DOMContentLoaded', () => {
-    const pathParts = window.location.pathname.split('/');
-    const currentPage = pathParts[pathParts.length - 1] || 'index.html';
-
-    if (!['login.html', 'register.html', ''].includes(currentPage)) {
-        requireAuth();
-    }
-});

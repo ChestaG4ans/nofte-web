@@ -200,11 +200,11 @@ const switchLabel = document.getElementById("switchLabel");
 const switchAuthMode = document.getElementById("switchAuthMode");
 const authForm = document.getElementById("authForm");
 
-// API URL from auth.js
-const API_URL = window.API_URL || "https://nofte-api.chestaadabikarnen03.workers.dev";
+// API URL
+const API_URL = "https://nofte-api.chestaadabikarnen03.workers.dev";
 
-// Redirect if already logged in
-if (getToken()) {
+// Redirect if already logged in (check after small delay)
+if (window.getToken && window.getToken()) {
     window.location.href = "index.html";
 }
 
